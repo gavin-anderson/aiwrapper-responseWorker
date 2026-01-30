@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx src/response/responseWorker.ts",
     "build": "rm -rf dist && tsc",
-    "start": "node dist/response/responseWorker.js",
+    "start": "node dist/src/response/responseWorker.js",
     "heroku-postbuild": "npm run build"
   },
   "keywords": [],
