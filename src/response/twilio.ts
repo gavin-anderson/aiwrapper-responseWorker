@@ -2,7 +2,48 @@
 import twilio from "twilio";
 import { CONFIG, requiredEnv } from "./config.js";
 
-const twilioClient = twilio(requiredEnv("TWILIO_ACCOUNT_SID"), requiredEnv("TWILIO_AUTH_TOKEN"));
+const accountSid = requiredEnv("TWILIO_ACCOUNT_SID");
+const authToken = requiredEnv("TWILIO_AUTH_TOKEN");
+const twilioClient = twilio(accountSid, authToken);
+
+export async function sendWhatsAppTypingIndicator(opts: {
+    inReplyToMessageSid: string;
+}): Promise<void> {
+    const url = "https://messaging.twilio.com/v2/Indicators/Typing.json";
+
+    const body = new URLSearchParams({
+        messageId: opts.inReplyToMessageSid,
+        channel: "whatsapp",
+    });
+
+    const ac = new AbortController();
+    const timeout = setTimeout(
+        () => ac.abort(),
+        CONFIG.TWILIO_TYPING_TIMEOUT_MS ?? 4000
+    );
+
+    try {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                Authorization: `Basic ${Buffer.from(`${accountSid}:${authToken}`).toString("base64")}`,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body,
+            signal: ac.signal,
+        });
+
+        // non-fatal UX call
+        if (!res.ok) {
+            const text = await res.text().catch(() => "");
+            console.warn("Typing indicator failed:", res.status, text);
+        }
+    } catch (e: any) {
+        console.warn("Typing indicator error:", e?.message ?? e);
+    } finally {
+        clearTimeout(timeout);
+    }
+}
 
 export async function sendViaTwilio(opts: { to: string; from: string; body: string }): Promise<string> {
     const sendPromise = twilioClient.messages.create({
