@@ -14,7 +14,7 @@ function computeTypingDelayMs(body: string): number {
     const normalized = Math.log1p(len) / Math.log1p(400);
     const base = 1000 + normalized * 4000;
     const jitter = (Math.random() - 0.5) * 300;
-    return Math.round(clamp(base + jitter, 1000, 5000));
+    return Math.round(clamp(base + jitter, 5000, 10000));
 }
 
 export async function sendWithTyping(opts: {
