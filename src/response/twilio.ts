@@ -7,12 +7,12 @@ const authToken = requiredEnv("TWILIO_AUTH_TOKEN");
 const twilioClient = twilio(accountSid, authToken);
 
 export async function sendWhatsAppTypingIndicator(opts: {
-    inReplyToMessageSid: string;
+    provider_inbound_sid: string;
 }): Promise<void> {
     const url = "https://messaging.twilio.com/v2/Indicators/Typing.json";
 
     const body = new URLSearchParams({
-        messageId: opts.inReplyToMessageSid,
+        messageId: opts.provider_inbound_sid,
         channel: "whatsapp",
     });
 
@@ -42,6 +42,7 @@ export async function sendWhatsAppTypingIndicator(opts: {
         console.warn("Typing indicator error:", e?.message ?? e);
     } finally {
         clearTimeout(timeout);
+        console.log("Cleared Typing Window endpoint")
     }
 }
 

@@ -4,6 +4,8 @@ import type { OutboundRow } from "./types.js";
 import { markOutboundSent } from "./repo.js";
 import { sendWithTyping } from "./sendWithTyping.js";
 
+
+
 export async function processOutbound(outbound: OutboundRow, log: (s: string) => void) {
     // Defensive: if already sent, mark sent.
     if (outbound.provider_outbound_sid) {
@@ -30,7 +32,7 @@ export async function processOutbound(outbound: OutboundRow, log: (s: string) =>
 
         // IMPORTANT: inbound Twilio MessageSid (SM...)
         // Either stored directly on outbound row or fetched via join
-        inReplyToMessageSid: outbound.provider_inbound_sid ?? null,
+        provider_inbound_sid: outbound.provider_inbound_sid ?? null,
     });
 
     // Persist success

@@ -3,10 +3,10 @@ import type { PoolClient } from "pg";
 import type { OutboundRow } from "./types.js";
 
 export async function claimOutbound(client: PoolClient, args: {
-    staleLockSeconds: number;
-    workerId: string;
+  staleLockSeconds: number;
+  workerId: string;
 }): Promise<OutboundRow | null> {
-    const q = `
+  const q = `
     WITH candidate AS (
       SELECT id
       FROM outbound_messages
@@ -37,15 +37,15 @@ export async function claimOutbound(client: PoolClient, args: {
       m.id, m.conversation_id, m.inbound_message_id, m.reply_job_id,
       m.provider, m.to_address, m.from_address, m.body,
       m.status, m.attempts, m.max_attempts, m.send_after,
-      m.locked_at, m.locked_by, m.provider_outbound_sid, m.last_error
+      m.locked_at, m.locked_by, m.provider_outbound_sid, m.last_error, m.provider_inbound_sid
   `;
-    const res = await client.query<OutboundRow>(q, [args.staleLockSeconds, args.workerId]);
-    return res.rows[0] ?? null;
+  const res = await client.query<OutboundRow>(q, [args.staleLockSeconds, args.workerId]);
+  return res.rows[0] ?? null;
 }
 
 export async function markOutboundSent(client: PoolClient, outboundId: string, sid: string) {
-    await client.query(
-        `
+  await client.query(
+    `
     UPDATE outbound_messages
     SET
       status='sent',
@@ -56,19 +56,19 @@ export async function markOutboundSent(client: PoolClient, outboundId: string, s
       updated_at=now()
     WHERE id=$1
     `,
-        [outboundId, sid]
-    );
+    [outboundId, sid]
+  );
 }
 
 export async function markOutboundFailedOrDeadletter(client: PoolClient, args: {
-    outbound: OutboundRow;
-    attemptsAfter: number;
-    isDead: boolean;
-    delaySeconds: number;
-    lastError: string;
+  outbound: OutboundRow;
+  attemptsAfter: number;
+  isDead: boolean;
+  delaySeconds: number;
+  lastError: string;
 }) {
-    await client.query(
-        `
+  await client.query(
+    `
     UPDATE outbound_messages
     SET
       attempts = $2,
@@ -83,6 +83,6 @@ export async function markOutboundFailedOrDeadletter(client: PoolClient, args: {
       updated_at = now()
     WHERE id = $1
     `,
-        [args.outbound.id, args.attemptsAfter, args.isDead, args.delaySeconds, args.lastError]
-    );
+    [args.outbound.id, args.attemptsAfter, args.isDead, args.delaySeconds, args.lastError]
+  );
 }

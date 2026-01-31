@@ -14,22 +14,20 @@ function computeTypingDelayMs(body: string): number {
     const normalized = Math.log1p(len) / Math.log1p(400);
     const base = 1000 + normalized * 4000;
     const jitter = (Math.random() - 0.5) * 300;
-    return Math.round(clamp(base + jitter, 5000, 10000));
+    return Math.round(clamp(base + jitter, 2000, 7000));
 }
 
 export async function sendWithTyping(opts: {
     to: string;
     from: string;
     body: string;
-    inReplyToMessageSid?: string | null;
+    provider_inbound_sid?: string | null;
 }) {
     const isWhatsApp = opts.to.startsWith("whatsapp:") || opts.from.startsWith("whatsapp:");
 
-    if (isWhatsApp && opts.inReplyToMessageSid) {
-
-        console.log("whatsapp number")
+    if (isWhatsApp && opts.provider_inbound_sid) {
         // fire typing immediately
-        await sendWhatsAppTypingIndicator({ inReplyToMessageSid: opts.inReplyToMessageSid });
+        await sendWhatsAppTypingIndicator({ provider_inbound_sid: opts.provider_inbound_sid });
 
         // hold 1-5s based on message size
         const delayMs = computeTypingDelayMs(opts.body);
