@@ -26,6 +26,8 @@ export async function sendWithTyping(opts: {
     const isWhatsApp = opts.to.startsWith("whatsapp:") || opts.from.startsWith("whatsapp:");
 
     if (isWhatsApp && opts.inReplyToMessageSid) {
+
+        console.log("whatsapp number")
         // fire typing immediately
         await sendWhatsAppTypingIndicator({ inReplyToMessageSid: opts.inReplyToMessageSid });
 
