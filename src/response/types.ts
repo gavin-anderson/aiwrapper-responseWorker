@@ -22,4 +22,5 @@ export type OutboundRow = {
 
     provider_outbound_sid: string | null;
     last_error: string | null;
+    provider_inbound_sid: string | null;
 };

@@ -30,7 +30,7 @@ export async function processOutbound(outbound: OutboundRow, log: (s: string) =>
 
         // IMPORTANT: inbound Twilio MessageSid (SM...)
         // Either stored directly on outbound row or fetched via join
-        inReplyToMessageSid: outbound.inbound_message_id ?? null,
+        inReplyToMessageSid: outbound.provider_inbound_sid ?? null,
     });
 
     // Persist success
