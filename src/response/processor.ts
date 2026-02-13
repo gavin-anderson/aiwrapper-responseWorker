@@ -1,7 +1,7 @@
 // src/response/processor.ts
 import { pool } from "../db/pool.js";
 import type { OutboundRow } from "./types.js";
-import { markOutboundSent } from "./repo.js";
+import { markOutboundSent } from "./queries.js";
 import { sendWithTyping } from "./sendWithTyping.js";
 
 
