@@ -5,7 +5,6 @@ export type OutboundRow = {
     id: string;
     conversation_id: string;
     inbound_message_id: string;
-    reply_job_id: string;
 
     provider: string;
     to_address: string;
@@ -24,4 +23,5 @@ export type OutboundRow = {
     last_error: string | null;
     provider_inbound_sid: string | null;
     sequence_number: number;
+    prompt_commit: string | null;
 };

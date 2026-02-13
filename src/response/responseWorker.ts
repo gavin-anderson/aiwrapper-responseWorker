@@ -2,7 +2,7 @@
 import "dotenv/config";
 import { pool } from "../db/pool.js";
 import { CONFIG } from "./config.js";
-import { claimOutboundBatch, markOutboundFailedOrDeadletter, releaseOutbound } from "./repo.js";
+import { claimOutboundBatch, markOutboundFailedOrDeadletter, releaseOutbound } from "./queries.js";
 import { computeSendBackoffSeconds, sleep, truncate } from "./utils.js";
 import { processOutbound } from "./processor.js";
 

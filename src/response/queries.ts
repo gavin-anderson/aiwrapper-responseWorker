@@ -34,11 +34,11 @@ export async function claimOutbound(client: PoolClient, args: {
     FROM candidate
     WHERE m.id = candidate.id
     RETURNING
-      m.id, m.conversation_id, m.inbound_message_id, m.reply_job_id,
+      m.id, m.conversation_id, m.inbound_message_id,
       m.provider, m.to_address, m.from_address, m.body,
       m.status, m.attempts, m.max_attempts, m.send_after,
       m.locked_at, m.locked_by, m.provider_outbound_sid, m.last_error, m.provider_inbound_sid,
-      m.sequence_number
+      m.sequence_number, m.prompt_commit
   `;
   const res = await client.query<OutboundRow>(q, [args.staleLockSeconds, args.workerId]);
   return res.rows[0] ?? null;
@@ -88,11 +88,11 @@ export async function claimOutboundBatch(client: PoolClient, args: {
     FROM candidates
     WHERE m.id = candidates.id
     RETURNING
-      m.id, m.conversation_id, m.inbound_message_id, m.reply_job_id,
+      m.id, m.conversation_id, m.inbound_message_id,
       m.provider, m.to_address, m.from_address, m.body,
       m.status, m.attempts, m.max_attempts, m.send_after,
       m.locked_at, m.locked_by, m.provider_outbound_sid, m.last_error, m.provider_inbound_sid,
-      m.sequence_number
+      m.sequence_number, m.prompt_commit
   `;
   const res = await client.query<OutboundRow>(q, [args.staleLockSeconds, args.workerId]);
   return res.rows.sort((a, b) => a.sequence_number - b.sequence_number);
