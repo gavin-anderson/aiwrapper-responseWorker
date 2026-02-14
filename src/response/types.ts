@@ -23,5 +23,6 @@ export type OutboundRow = {
     last_error: string | null;
     provider_inbound_sid: string | null;
     sequence_number: number;
-    prompt_commit: string | null;
+    prompt_version: string | null;
+    model: string | null;
 };

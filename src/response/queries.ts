@@ -38,7 +38,7 @@ export async function claimOutbound(client: PoolClient, args: {
       m.provider, m.to_address, m.from_address, m.body,
       m.status, m.attempts, m.max_attempts, m.send_after,
       m.locked_at, m.locked_by, m.provider_outbound_sid, m.last_error, m.provider_inbound_sid,
-      m.sequence_number, m.prompt_commit
+      m.sequence_number, m.prompt_version, m.model
   `;
   const res = await client.query<OutboundRow>(q, [args.staleLockSeconds, args.workerId]);
   return res.rows[0] ?? null;
@@ -92,7 +92,7 @@ export async function claimOutboundBatch(client: PoolClient, args: {
       m.provider, m.to_address, m.from_address, m.body,
       m.status, m.attempts, m.max_attempts, m.send_after,
       m.locked_at, m.locked_by, m.provider_outbound_sid, m.last_error, m.provider_inbound_sid,
-      m.sequence_number, m.prompt_commit
+      m.sequence_number, m.prompt_version, m.model
   `;
   const res = await client.query<OutboundRow>(q, [args.staleLockSeconds, args.workerId]);
   return res.rows.sort((a, b) => a.sequence_number - b.sequence_number);
